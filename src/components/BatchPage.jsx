@@ -117,6 +117,13 @@ export default function BatchPage() {
   Company-wise IET DAVV Indore Placement Data for the {batch} Batch
 </h1>
           <button
+  onClick={() => window.open("https://www.google.com", "_blank")}
+  className="bg-blue-500 px-6 mx-2 py-2 w-auto text-nowrap rounded-md hover:bg-blue-600 transition-colors"
+>
+  Login
+</button>
+
+          <button
             onClick={() => dispatch(clearFilters())}
             className="bg-red-500 px-4 py-2 w-auto text-nowrap rounded-md hover:bg-red-700 transition-colors"
           >
@@ -169,6 +176,9 @@ export default function BatchPage() {
                       </div>
                     </th>
                   ))}
+                  <th className="px-6 py-3 text-left text-xs font-medium text-blue-100 uppercase tracking-wider">
+    Action
+  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-blue-900 divide-opacity-25">
@@ -187,6 +197,17 @@ export default function BatchPage() {
 
                       </td>
                     ))}
+                    <td className="px-6 py-2">
+    <button
+      onClick={(e) => {
+        e.stopPropagation(); // prevents row click
+        navigate(`/company/${row.id}`);
+      }}
+      className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs"
+    >
+      Read More
+    </button>
+  </td>
                   </tr>
                 ))}
               </tbody>

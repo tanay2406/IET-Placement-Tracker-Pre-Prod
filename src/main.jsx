@@ -5,6 +5,7 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import { store } from './redux/store'
 import App from './App'
 import BatchPage from './components/BatchPage'
+import CompanyDetails from './components/CompanyDetails'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -14,6 +15,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/batch/:batch" element={<BatchPage />} />
+          <Route path="/company/:id" element={<CompanyDetails  />} />
+
         </Routes>
       </Router>
     </Provider>

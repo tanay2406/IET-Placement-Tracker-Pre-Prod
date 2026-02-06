@@ -274,12 +274,3 @@ function senduserdataToBackend(userdata) {
     console.error('Error:', error);
   });
 }
-
-// Client ID
-// 11793900105-1i6uablmrgsjl4clat9tu6u81n6fgijv.apps.googleusercontent.com
-
-
-// Client secret
-// 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
-
-// psql 'postgresql://neondb_owner:npg_zhWfF9egN5lU@ep-frosty-mud-a1aaofiv-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'

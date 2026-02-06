@@ -9,8 +9,13 @@ import Modal from './Modal'
 import { useState } from 'react'
 import Footer from './Footer'
 import { formatNumber } from '../utils/formatNumber'; // Import the utility function
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 export default function BatchPage() {
+  const [user, setUser] = useState(
+  JSON.parse(localStorage.getItem("user"))
+  );
   const { batch } = useParams()
   const dispatch = useDispatch()
   const filters = useSelector((state) => state.filter.filters)
@@ -116,12 +121,41 @@ export default function BatchPage() {
         <h1 className='text-[10px] w-1/2 md:w-full md:text-lg font-poppins tracking-wide text-gray-100'>
   Company-wise IET DAVV Indore Placement Data for the {batch} Batch
 </h1>
+
+ {/* button */}
+      {user ? (
+        <div className="flex items-center gap-3">
+          <img
+            src={user.picture}
+            alt="profile"
+            className="w-8 h-8 rounded-full"
+          />
+          <span className="text-sm">{user.name}</span>
           <button
-  onClick={() => window.open("https://www.google.com", "_blank")}
-  className="bg-blue-500 px-6 mx-2 py-2 w-auto text-nowrap rounded-md hover:bg-blue-600 transition-colors"
->
-  Login
-</button>
+            onClick={() => {
+              localStorage.removeItem("user");
+              setUser(null);
+            }}
+            className="bg-red-500 px-3 py-1 rounded text-xs"
+          >
+            Logout
+          </button>
+        </div>
+      ) : (
+        <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            const decoded = jwtDecode(credentialResponse.credential);
+            localStorage.setItem("user", JSON.stringify(decoded));
+            setUser(decoded);
+            console.log(decoded) ;
+            senduserdataToBackend(decoded) ;
+          }}
+          onError={() => {
+            console.log("Login Failed");
+          }}
+        />
+      )}
+
 
           <button
             onClick={() => dispatch(clearFilters())}
@@ -223,3 +257,29 @@ export default function BatchPage() {
     </div>
   )
 } 
+
+function senduserdataToBackend(userdata) {
+  fetch('http://localhost:5000/api/data', {
+    method: 'POST',  
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(userdata)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+}
+
+// Client ID
+// 11793900105-1i6uablmrgsjl4clat9tu6u81n6fgijv.apps.googleusercontent.com
+
+
+// Client secret
+// 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
+
+// psql 'postgresql://neondb_owner:npg_zhWfF9egN5lU@ep-frosty-mud-a1aaofiv-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'

@@ -23,3 +23,10 @@ The goal is to provide them with a **useful resource** that can guide their prep
 git checkout dev
 git pull origin dev
 git checkout -b "<your-name>/dev/<feature-name>"
+
+### To Run
+fitst at the dame folder do npm i then do npm run dev
+
+then onen another terminal and cd backend
+then again do npm i then node server.js
+

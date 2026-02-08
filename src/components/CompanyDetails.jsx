@@ -26,13 +26,13 @@ export default function CompanyDetails() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            googleId: storedUser.sub,
+            sub: String(storedUser.sub),
           }),
         }
       );
 
       const data = await response.json();
-
+      console.log("Subscription status:", data.subscribed_status_pyq);
       if (data.subscribed_status_pyq) {
         navigate(`/company/${company.id}/pyq`);
       } else {

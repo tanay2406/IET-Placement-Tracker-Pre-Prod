@@ -55,6 +55,22 @@ app.post("/api/data", async (req, res) => {
     console.error("Database error:", err);
     res.status(500).json({ error: "Database error" });
   }
+})
+
+app.post("/api/subscribed_status_pyq", async (req, res) => {
+  const { sub } = req.body;
+
+  try {
+    const result = await pool.query(
+      "SELECT subscribed_status_pyq FROM users WHERE google_id = $1",
+      [sub]
+    );
+    console.log(result) ;
+    res.json({ subscribed_status_pyq: result.rows[0]?.subscribed_status_pyq || false });
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Database error" });
+  }
 });
 
 

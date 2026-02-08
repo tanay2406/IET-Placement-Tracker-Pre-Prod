@@ -19,7 +19,7 @@ export default function CompanyDetails() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/check-subscription",
+        "http://localhost:5000/api/subscribed_status_pyq",
         {
           method: "POST",
           headers: {
@@ -33,7 +33,7 @@ export default function CompanyDetails() {
 
       const data = await response.json();
 
-      if (data.isSubscribed) {
+      if (data.subscribed_status_pyq) {
         navigate(`/company/${company.id}/pyq`);
       } else {
         navigate("/subscribe");

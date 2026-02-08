@@ -9,6 +9,40 @@ export default function CompanyDetails() {
     (item) => String(item.id) === String(id)
   );
 
+  const checkSubscriptionAndNavigate = async () => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!storedUser) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/check-subscription",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            googleId: storedUser.sub,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.isSubscribed) {
+        navigate(`/company/${company.id}/pyq`);
+      } else {
+        navigate("/subscribe");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   if (!company) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -19,8 +53,7 @@ export default function CompanyDetails() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white p-10">
-      
-      {/* Back Button */}
+
       <button
         onClick={() => navigate(-1)}
         className="mb-6 bg-blue-600 px-4 py-2 rounded"
@@ -28,9 +61,27 @@ export default function CompanyDetails() {
         ← Back
       </button>
 
-      <h1 className="text-3xl font-bold mb-6">
-        {company.Company}
-      </h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">
+          {company.Company}
+        </h1>
+
+        <div className="flex gap-4">
+          <button
+            onClick={checkSubscriptionAndNavigate}
+            className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md transition"
+          >
+            PYQ
+          </button>
+
+          <button
+            onClick={() => navigate(`/company/${company.id}/call`)}
+            className="bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-md transition"
+          >
+            1:1 Call
+          </button>
+        </div>
+      </div>
 
       <div className="bg-white/10 rounded-lg overflow-hidden">
         <table className="w-full">

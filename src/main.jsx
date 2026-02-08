@@ -6,6 +6,8 @@ import { store } from './redux/store'
 import App from './App'
 import BatchPage from './components/BatchPage'
 import CompanyDetails from './components/CompanyDetails'
+import CompanyPYQ from './components/CompanyPYQ'
+import CompanyCall from './components/CompanyCall'
 import './index.css'
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -19,6 +21,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path="/" element={<App />} />
             <Route path="/batch/:batch" element={<BatchPage />} />
             <Route path="/company/:id" element={<CompanyDetails />} />
+            <Route path="/company/:id/pyq" element={<CompanyPYQ />} />
+            <Route path="/company/:id/call" element={<CompanyCall />} />
+
           </Routes>
         </Router>
       </Provider>

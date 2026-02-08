@@ -32,7 +32,7 @@ app.post("/api/data", async (req, res) => {
   try {
 
     const existingUser = await pool.query(
-      "SELECT user_id FROM usersDetails WHERE google_id = $1",
+      "SELECT user_id FROM users WHERE google_id = $1",
       [sub]
     );
 
@@ -42,7 +42,7 @@ app.post("/api/data", async (req, res) => {
     }
 
     await pool.query(
-      `INSERT INTO usersDetails
+      `INSERT INTO users
       (google_id, name, email, mobile_number, branch, branch_id)
       VALUES ($1, $2, $3, $4, $5, $6)`,
       [sub, name, email, mobile_number, branch, branch_id]
@@ -55,7 +55,41 @@ app.post("/api/data", async (req, res) => {
     console.error("Database error:", err);
     res.status(500).json({ error: "Database error" });
   }
+})
+
+app.post("/api/subscribed_status_pyq", async (req, res) => {
+  const { sub } = req.body;
+
+  try {
+    const result = await pool.query(
+      "SELECT subscribed_status_pyq FROM users WHERE google_id = $1",
+      [sub]
+    );
+    console.log(result) ;
+    res.json({ subscribed_status_pyq: result.rows[0]?.subscribed_status_pyq || false });
+  } catch (err) {
+
+    res.status(500).json({ error: "Database error" });
+  }
 });
+
+
+app.post("/api/subscribed_status_call", async (req, res) => {
+  const { sub } = req.body;
+
+  try {
+    const result = await pool.query(
+      "SELECT subscribed_status_call FROM users WHERE google_id = $1",
+      [sub]
+    );
+    console.log(result) ;
+    res.json({ subscribed_status_call: result.rows[0]?.subscribed_status_call || false });
+  } catch (err) {
+
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
 
 
 

@@ -32,7 +32,7 @@ app.post("/api/data", async (req, res) => {
   try {
 
     const existingUser = await pool.query(
-      "SELECT user_id FROM usersDetails WHERE google_id = $1",
+      "SELECT user_id FROM users WHERE google_id = $1",
       [sub]
     );
 
@@ -42,7 +42,7 @@ app.post("/api/data", async (req, res) => {
     }
 
     await pool.query(
-      `INSERT INTO usersDetails
+      `INSERT INTO users
       (google_id, name, email, mobile_number, branch, branch_id)
       VALUES ($1, $2, $3, $4, $5, $6)`,
       [sub, name, email, mobile_number, branch, branch_id]

@@ -90,7 +90,50 @@ app.post("/api/subscribed_status_call", async (req, res) => {
   }
 });
 
+app.post("/api/makeSubscription", async (req, res) => {
+  const {
+    user_id,
+    company_id,
+    subscription_type,
+    transaction_id
+  } = req.body;
 
+  try {
+    user_id = await pool.query(
+      `SELECT user_id FROM users 
+       WHERE google_id = $1`,
+      [user_id]
+    );
+    // 1️⃣ Check if already subscribed
+    const existingSubscription = await pool.query(
+      `SELECT id FROM user_subscriptions 
+       WHERE user_id = $1 
+       AND company_id = $2 
+       AND subscription_type = $3`,
+      [user_id, company_id, subscription_type]
+    );
+
+    if (existingSubscription.rows.length > 0) {
+      console.log("User already subscribed to this company");
+      return res.json({ message: "Already subscribed" });
+    }
+
+    // 2️⃣ Insert new subscription
+    await pool.query(
+      `INSERT INTO user_subscriptions
+      (user_id, company_id, subscription_type, transaction_id)
+      VALUES ($1, $2, $3, $4)`,
+      [user_id, company_id, subscription_type, transaction_id]
+    );
+
+    console.log("Subscription created successfully");
+    res.status(201).json({ message: "Subscription successful" });
+
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
 
 
 

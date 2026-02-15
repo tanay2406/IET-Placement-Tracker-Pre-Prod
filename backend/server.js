@@ -135,6 +135,45 @@ app.post("/api/makeSubscription", async (req, res) => {
   }
 });
 
+// api to check if the person is subscribed or not
+app.post("/api/isSubscription", async (req, res) => {
+  const { sub, company_id, subscription_type } = req.body;
+
+  try {
+
+    // Step 1: Get user_id from google_id
+    const userResult = await pool.query(
+      "SELECT user_id FROM users WHERE google_id = $1",
+      [sub]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.json({ isSubscribed: false });
+    }
+
+    const user_id = userResult.rows[0].user_id;
+
+    // Step 2: Check subscription in user_subscriptions table
+    const subscriptionResult = await pool.query(
+      `SELECT id FROM user_subscriptions 
+       WHERE user_id = $1 
+       AND company_id = $2 
+       AND subscription_type = $3`,
+      [user_id, company_id, subscription_type]
+    );
+
+    // Step 3: Return true if exists
+    if (subscriptionResult.rows.length > 0) {
+      return res.json({ isSubscribed: true });
+    }
+
+    res.json({ isSubscribed: false });
+
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
 
 
 app.listen(PORT, () => {

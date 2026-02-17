@@ -19,7 +19,7 @@ export default function CompanyDetails() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/subscribed_status_pyq",
+        "http://localhost:5000/api/isSubscription",
         {
           method: "POST",
           headers: {
@@ -27,13 +27,15 @@ export default function CompanyDetails() {
           },
           body: JSON.stringify({
             sub: String(storedUser.sub),
+            company_id: company.id,
+            subscription_type: "pyq",
           }),
         }
       );
 
       const data = await response.json();
-      console.log("Subscription status:", data.subscribed_status_pyq);
-      if (data.subscribed_status_pyq) {
+      console.log("Subscription status:", data.isSubscribed);
+      if (data.isSubscribed) {
         navigate(`/company/${company.id}/pyq`);
       } else {
         navigate(`/subscribe/${company.id}/pyq`);

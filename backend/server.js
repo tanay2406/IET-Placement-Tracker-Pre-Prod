@@ -120,7 +120,7 @@ app.post("/api/makeSubscription", async (req, res) => {
     const user_id = userResult.rows[0].user_id;
     // 1️⃣ Check if already subscribed
     const existingSubscription = await pool.query(
-      `SELECT id FROM user_subscriptions 
+      `SELECT subscription_id FROM user_subscriptions 
        WHERE user_id = $1 
        AND company_id = $2 
        AND subscription_type = $3`,
@@ -169,7 +169,7 @@ app.post("/api/isSubscription", async (req, res) => {
 
     // Step 2: Check subscription in user_subscriptions table
     const subscriptionResult = await pool.query(
-      `SELECT id FROM user_subscriptions 
+      `SELECT subscription_id FROM user_subscriptions 
        WHERE user_id = $1 
        AND company_id = $2 
        AND subscription_type = $3`,
@@ -271,9 +271,9 @@ app.post("/api/verify-payment", async (req, res) => {
     // 2️⃣ Insert subscription
     await pool.query(
       `INSERT INTO user_subscriptions
-       (user_id, id, transaction_id, subscription_type, company_id)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [user_id, package_id, razorpay_payment_id, subscription_type, company_id]
+       (user_id, transaction_id, subscription_type, company_id)
+       VALUES ($1, $2, $3, $4)`,
+      [user_id, razorpay_payment_id, subscription_type, company_id]
     );
 
     res.json({ message: "Payment verified & subscription added" });

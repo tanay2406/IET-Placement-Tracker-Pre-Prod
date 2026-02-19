@@ -6,7 +6,7 @@ import { ChevronUp, ChevronDown, Sparkles, ArrowLeft, ArrowRight, ChevronsLeftRi
 import data2026 from '../data/2026.json'
 import Header from './Header'
 import Modal from './Modal'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import Footer from './Footer'
 import { formatNumber } from '../utils/formatNumber'; // Import the utility function
 import { GoogleLogin } from "@react-oauth/google";
@@ -25,6 +25,7 @@ export default function BatchPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedCompany, setSelectedCompany] = useState(null)
+  const [showProfile, setShowProfile] = useState(false);
 
   const navigate = useNavigate()
 
@@ -40,6 +41,14 @@ export default function BatchPage() {
     setSelectedCompany(companyDetails)
     setIsModalOpen(true)
   }
+  useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  console.log(storedUser)
+  if (storedUser) {
+    setUser(JSON.parse(storedUser));
+  }
+}, []);
+
 
   // Helper function to compare values for sorting
   const compareValues = (a, b, field) => {
@@ -124,37 +133,74 @@ export default function BatchPage() {
 
  {/* button */}
       {user ? (
-        <div className="flex items-center gap-3">
+  <div className="relative">
+    {/* My Profile Button */}
+    <button
+      onClick={() => setShowProfile(!showProfile)}
+      className="bg-blue-600 px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition"
+    >
+      My Profile
+    </button>
+
+    {/* Slider / Dropdown Panel */}
+    
+      <div
+    className={`absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-4 z-50 transform transition-all duration-300 ${
+      showProfile
+        ? "opacity-100 translate-y-0"
+        : "opacity-0 -translate-y-2 pointer-events-none"
+    }`}
+  >
+        <div className="flex items-center gap-3 mb-4">
           <img
             src={user.picture}
             alt="profile"
-            className="w-8 h-8 rounded-full"
+            className="w-12 h-12 rounded-full"
           />
-          <span className="text-sm">{user.name}</span>
+          <div>
+            <p className="text-s text-gray-500">{user.name}</p>
+            <p className="text-xs text-gray-500">{user.email}</p>
+          </div>
+        </div>
+
+        <hr className="mb-3" />
+
+        <div className="flex flex-col gap-2 text-sm">
+          <a href="/subscriptions" className="text-blue-600">
+            My Subscriptions
+          </a>
+
+          <a href="/transactions" className="text-blue-600">
+            My Transactions
+          </a>
+
           <button
             onClick={() => {
               localStorage.removeItem("user");
               setUser(null);
             }}
-            className="bg-red-500 px-3 py-1 rounded text-xs"
+            className="text-red-500 text-left hover:text-red-700"
           >
             Logout
           </button>
         </div>
-      ) : (
-        <GoogleLogin
-          onSuccess={(credentialResponse) => {
-            const decoded = jwtDecode(credentialResponse.credential);
-            localStorage.setItem("user", JSON.stringify(decoded));
-            setUser(decoded);
-            console.log(decoded) ;
-            senduserdataToBackend(decoded) ;
-          }}
-          onError={() => {
-            console.log("Login Failed");
-          }}
-        />
-      )}
+      </div>
+    
+  </div>
+) : (
+  <GoogleLogin
+    onSuccess={(credentialResponse) => {
+      const decoded = jwtDecode(credentialResponse.credential);
+      localStorage.setItem("user", JSON.stringify(decoded));
+      setUser(decoded);
+      senduserdataToBackend(decoded);
+    }}
+    onError={() => {
+      console.log("Login Failed");
+    }}
+  />
+)}
+
 
 
           <button

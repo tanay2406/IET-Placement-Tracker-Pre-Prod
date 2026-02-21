@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { setFilter, clearFilters, setSort } from '../redux/filterSlice'
-import { ChevronUp, ChevronDown, Sparkles, ArrowLeft, ArrowRight, ChevronsLeftRightEllipsis } from 'lucide-react'
+import { ChevronUp, ChevronDown, Sparkles, ArrowLeft } from 'lucide-react'
 import data2026 from '../data/2026.json'
 import Header from './Header'
 import Modal from './Modal'
@@ -21,7 +21,7 @@ export default function BatchPage() {
   const filters = useSelector((state) => state.filter.filters)
   const sort = useSelector((state) => state.filter.sort)
  const data = data2026
-
+const visibleColumns = ['id', 'Date', 'Company','Eligible Batches', 'CGPA','CTC (in LPA)','Compensation in Internship'];
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedCompany, setSelectedCompany] = useState(null)
@@ -119,11 +119,6 @@ export default function BatchPage() {
         </div>
       </div>
 
-      <div className="flex flex-row items-center gap-2 scroll-arrow absolute top-[50%]  bg-black/30 right-[60px] border-2 border-white/30 rounded-full p-3 px-5">
-        <ChevronsLeftRightEllipsis />
-        <span className='hidden md:block text-sm'>scroll</span>
-      </div>
-
       <main className="flex-grow p-4 md:p-8">
 
         <div className="mb-6 flex justify-between items-center">
@@ -202,27 +197,27 @@ export default function BatchPage() {
 )}
 
 
-
+{/* 
           <button
             onClick={() => dispatch(clearFilters())}
             className="bg-red-500 px-4 py-2 w-auto text-nowrap rounded-md hover:bg-red-700 transition-colors"
           >
             Clear Filters
-          </button>
+          </button> */}
         </div>
 
-        <div className="overflow-x-auto relative">
-          <div className="h-[calc(100vh-160px)] overflow-y-auto">
-            <table className="min-w-full bg-white bg-opacity-10 rounded-lg">
-              <thead className="bg-blue-900 sticky top-0 z-10">
+        <div className="overflow-x-auto">
+            <table className="min-w-full bg-white bg-opacity-5 rounded-lg">
+              <thead className="bg-blue-900/80">
                 <tr>
-                  {Object.keys(data[0]).map((header) => (
+                  
+                  { visibleColumns.map((header) => (
                     <th
                       key={header}
-                      className={`px-6 py-3 text-left text-xs font-medium text-blue-100 uppercase tracking-wider ${header === 'S.No.' ? 'w-8' : ''}`}
+                      className={`px-3 md:px-4 py-2 text-left text-xs font-medium text-blue-100 uppercase tracking-wider ${header === 'id' ? 'w-12' : ''}`  }
                     >
-                      <div className="flex flex-col space-y-2">
-                        <div className="flex items-center space-x-2">
+                      <div className="flex flex-col space-y-1">
+                        <div className="flex items-center space-x-1">
                           <span>{header}</span>
                           {sortableColumns.includes(header) && (
                             <button
@@ -244,46 +239,55 @@ export default function BatchPage() {
                             </button>
                           )}
                         </div>
-                        {header !== 'S.No.' && (
+                        {header !== 'id' && (
                           <input
                             type="text"
                             placeholder={`Filter ${header}`}
                             value={filters[header] || ''}
                             onChange={(e) => handleFilterChange(header, e.target.value)}
-                            className="bg-blue-800 bg-opacity-50 text-white px-2 py-1 w-auto rounded text-xs placeholder-blue-300"
+                            className="bg-blue-800 bg-opacity-50 text-white px-2 py-0.5 w-auto rounded text-xs placeholder-blue-300"
                           />
                         )}
                       </div>
                     </th>
                   ))}
-                  <th className="px-6 py-3 text-left text-xs font-medium text-blue-100 uppercase tracking-wider">
+                  <th className="px-3 md:px-4 py-2 text-left text-xs font-medium text-blue-100 uppercase tracking-wider">
     Action
   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-blue-900 divide-opacity-25">
+              <tbody className="divide-y divide-blue-900/30">
                 {processedData.map((row, idx) => (
                   <tr
                     key={idx}
                     className="hover:bg-blue-900 hover:bg-opacity-20 transition-colors cursor-pointer"
                     onClick={() => handleCompanyClick(row)}
                   >
-                    {Object.values(row).map((value, cellIdx) => (
-                      <td key={cellIdx} className="text-wrap w-8 px-6 py-2 md:py-3 whitespace-nowrap text-sm text-white">
+                    {/* {Object.values(row).map((value, cellIdx) => (
+                      <td key={cellIdx} className="text-wrap w-8 px-3 md:px-4 py-1.5 md:py-2 whitespace-nowrap text-sm text-white">
                        {!isNaN(Number(value))
   ? formatNumber(Number(value))
   : value?.toString() || '-'}
 
 
                       </td>
-                    ))}
-                    <td className="px-6 py-2">
+                    ))} */}
+                    {/* for the display of the dagta inrow */}
+                    {visibleColumns.map((key) => (
+ <td
+  key={key}
+  className={`px-3 md:px-4 py-2 text-sm text-white ${key === 'id' ? 'w-12 ' : ''}`}
+>
+    {!isNaN(Number(row[key])) ? formatNumber(Number(row[key])) : row[key]?.toString() || '-'}
+  </td>
+))}
+                    <td className="px-3 md:px-4 py-1.5 md:py-2">
     <button
       onClick={(e) => {
         e.stopPropagation(); // prevents row click
         navigate(`/company/${row.id}`);
       }}
-      className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs"
+      className="bg-blue-600 hover:bg-blue-700 px-2.5 py-0.5 rounded text-xs"
     >
       Read More
     </button>
@@ -292,7 +296,6 @@ export default function BatchPage() {
                 ))}
               </tbody>
             </table>
-          </div>
         </div>
 
       </main>

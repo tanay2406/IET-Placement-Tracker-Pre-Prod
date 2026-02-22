@@ -279,9 +279,9 @@ const checkConsultationAndNavigate = async () => {
             My Subscriptions
           </Link>
 
-          <a href="/transactions" className="text-blue-600">
+          {/* <a href="/transactions" className="text-blue-600">
             My Transactions
-          </a>
+          </a> */}
 
           <button
             onClick={() => {

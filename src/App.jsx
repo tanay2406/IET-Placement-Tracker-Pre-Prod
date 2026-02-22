@@ -41,23 +41,66 @@ export default function App() {
   className="text-lg md:text-lg mb-2 text-blue-100 leading-tight"
 >
   Company-wise IET DAVV Indore Placement Data — 2026 Batch Onwards
+
+
+
+        
+        {/* news thing */}
+
 </motion.p>
 <motion.div
-  initial={{ opacity: 0, y: 10 }}
+  initial={{ opacity: 0, y: 40 }}
   animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.4 }}
-  whileHover={{ scale: 1.02 }}
-  className="mt-6 cursor-pointer bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-indigo-600/20 
-             border border-purple-400/30 
-             px-6 py-3 rounded-xl backdrop-blur-md 
-             shadow-lg shadow-purple-500/10 
-             flex items-center justify-center gap-3"
+  transition={{ duration: 0.6, delay: 0.4 }}
+  whileHover={{ scale: 1.03 }}
+  className="relative mt-8 cursor-pointer group max-w-2xl mx-auto"
 >
-  <span className="text-sm md:text-base font-medium text-purple-200">
-    🔥 NEW: 1-on-1 Placement Consultation with 2026 Senior
-  </span>
-  <ArrowUpRight className="w-4 h-4 text-purple-300" />
+
+  {/* Glow */}
+  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r 
+    from-purple-600 via-blue-600 to-indigo-600 
+    blur-xl opacity-40 group-hover:opacity-70 
+    animate-pulse transition-all duration-500" />
+
+  <div className="relative overflow-hidden px-8 py-6 rounded-2xl 
+    bg-gradient-to-r from-purple-900/60 via-blue-900/60 to-indigo-900/60
+    backdrop-blur-md border border-white/10
+    shadow-2xl text-center">
+
+    {/* Limited Badge */}
+    <motion.div
+      animate={{ scale: [1, 1.1, 1] }}
+      transition={{ repeat: Infinity, duration: 1 }}
+      className="inline-block mb-3 bg-red-500/20 border border-red-500 
+      text-red-400 px-4 py-1 rounded-full text-sm font-semibold shadow-lg"
+    >
+      🔥 Only Limited Free Slots
+    </motion.div>
+
+    <h3 className="text-lg md:text-xl font-bold text-white">
+      1-on-1 Placement Consultation
+    </h3>
+
+    <p className="text-blue-200 text-sm mt-1">
+      Talk directly with 2026 seniors and clear all your placement doubts.
+    </p>
+
+    <motion.div
+      animate={{ x: [0, 5, 0] }}
+      transition={{ repeat: Infinity, duration: 1.5 }}
+      className="mt-3 flex justify-center"
+    >
+      <span className="text-blue-300 flex items-center gap-2 font-medium">
+        Book Your Free Session Now
+      </span>
+    </motion.div>
+
+  </div>
 </motion.div>
+
+
+
+
                     
             {/* Improved Batch Links */}
             <div className="mt-8 md:mt-12 w-full flex flex-col sm:flex-row items-center gap-5 justify-center">

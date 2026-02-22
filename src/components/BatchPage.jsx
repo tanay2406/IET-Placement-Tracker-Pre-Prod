@@ -13,6 +13,8 @@ import { formatNumber } from '../utils/formatNumber'; // Import the utility func
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 
+
+
 export default function BatchPage() {
   const [user, setUser] = useState(
   JSON.parse(localStorage.getItem("user"))
@@ -29,6 +31,8 @@ export default function BatchPage() {
   const [showProfile, setShowProfile] = useState(false);
   const profileMenuRef = useRef(null)
 
+  const [toast, setToast] = useState(null);
+  
   const navigate = useNavigate()
 
   const handleFilterChange = (field, value) => {
@@ -126,10 +130,20 @@ export default function BatchPage() {
   const handleConsultationClick = async () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
 
+  // if (!storedUser) {
+  //   navigate("/login");
+  //   return;
+  // }
+
   if (!storedUser) {
-    navigate("/login");
-    return;
-  }
+  setToast("Please login first");
+  
+  setTimeout(() => {
+    setToast(null);
+  }, 2000);
+
+  return;
+}
 
   try {
    const response = await fetch("http://localhost:5000/api/isSubscription", {
@@ -235,12 +249,7 @@ const checkConsultationAndNavigate = async () => {
       My Profile
     </button>
 
-    <button
-      onClick={handleConsultationClick}
-      className="bg-purple-600 px-4 py-2 rounded-md text-sm hover:bg-purple-700 transition"
-    >
-      1:1 Consultation
-    </button>
+
 
     {/* Slider / Dropdown Panel */}
     
@@ -300,6 +309,14 @@ const checkConsultationAndNavigate = async () => {
     }}
   />
 )}
+
+    <button
+      onClick={handleConsultationClick}
+      className=" m-3 bg-purple-600 px-4 py-2 rounded-md text-sm hover:bg-purple-700 transition"
+    >
+      1:1 Consultation
+    </button>
+
 
 
 {/* 
@@ -402,6 +419,17 @@ const checkConsultationAndNavigate = async () => {
               </tbody>
             </table>
         </div>
+
+        {/* toast code  */}
+
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-red-600 text-white px-8 py-4 rounded-xl shadow-2xl text-base font-medium min-w-[280px] text-center transition-all duration-300 animate-slideUp">
+            {toast}
+          </div>
+        </div>
+      )}
+
 
       </main>
 

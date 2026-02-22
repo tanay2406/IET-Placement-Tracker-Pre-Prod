@@ -139,7 +139,8 @@ export default function MySubscriptions() {
           </div>
 
           <button
-            onClick={() => navigate("/consultation")}
+            // onClick={() => navigate("/consultation")}
+            onClick={() => window.open("https://meet.google.com/hpe-pyym-mne", "_blank")}
             className="bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-md transition"
           >
             Open

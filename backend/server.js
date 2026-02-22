@@ -5,7 +5,7 @@ const pool = require("./db");
 
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
-
+const sendSubscriptionEmail = require("./sendEmail");
 
 const app = express();
 const PORT = 5000;
@@ -75,20 +75,22 @@ app.post("/api/makeSubscription", async (req, res) => {
     sub,
     company_id,
     subscription_type,
-    transaction_id
+    transaction_id,
   } = req.body;
 
   try {
     const userResult = await pool.query(
-      "SELECT user_id FROM users WHERE google_id = $1",
+      "SELECT user_id,email,name FROM users WHERE google_id = $1",
       [sub]
     );
-
+    
     if (userResult.rows.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 
     const user_id = userResult.rows[0].user_id;
+    const email = userResult.rows[0].email;
+    const name = userResult.rows[0].name;
     // 1️⃣ Check if already subscribed
     const existingSubscription = await pool.query(
       `SELECT subscription_id FROM user_subscriptions 
@@ -112,6 +114,8 @@ app.post("/api/makeSubscription", async (req, res) => {
     );
 
     console.log("Subscription created successfully");
+    // 3️⃣ Send confirmation email
+    await sendSubscriptionEmail(email, name);
     res.status(201).json({ message: "Subscription successful" });
 
   } catch (err) {
@@ -162,8 +166,8 @@ app.post("/api/isSubscription", async (req, res) => {
 
 app.post("/api/getUserSubscriptions", async (req, res) => {
   const { sub } = req.body;
-  console.log(sub);
-  console.log(typeof(sub));
+  // console.log(sub);
+  // console.log(typeof(sub));
   try {
     // Get user_id from google_id
     const userResult = await pool.query(

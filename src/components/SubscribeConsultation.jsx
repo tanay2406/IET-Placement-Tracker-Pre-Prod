@@ -39,18 +39,62 @@ export default function SubscribeConsultation() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-950 text-white">
-
-      <h1 className="text-3xl font-bold mb-6">
-        Unlock 1:1 Consultation
-      </h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-gray-950 text-white p-10">
 
       <button
-        onClick={handleUnlock}
-        className="bg-blue-600 px-6 py-3 rounded-lg"
+        onClick={() => navigate(-1)}
+        className="mb-8 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition"
       >
-        Unlock Consultation
+        ← Back
       </button>
+
+      <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-10 shadow-2xl flex flex-col md:flex-row items-center gap-8">
+
+        <h1 className="text-2xl md:text-3xl font-semibold">
+          Unlock 1:1 consultation
+          
+        </h1>
+
+        <button 
+          onClick={handleUnlock}
+          className="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-lg text-lg font-medium transition duration-300 shadow-lg hover:shadow-blue-500/40"
+        >
+          Unlock
+        </button>
+        
+
+      </div>
+      <br /><br /><br />
+      <div>
+        <h3> <h1 className="text-2xl">📘 Placement Consultation (Free Session)</h1><br />
+
+This consultation is a general discussion about:
+
+How placements happened in previous years
+
+The overall placement scenario
+
+Preparation strategy and common mistakes
+
+Any doubts you have regarding placements
+
+You will be meeting with a senior from the 2026 batch, who has experienced the placement process firsthand.
+<br></br><br></br>
+<h1 className="text-2xl">📅 How It Works </h1><br />
+
+The meeting link will be shared on your provided Gmail ID along with the scheduled time.
+
+The session duration will be around 20–25 minutes.
+
+This session is completely free of cost (for now).
+<br></br><br></br>
+<h1 className="text-2xl">📩 Need Help?</h1>br
+
+For any queries, you can reach out to us at:
+ietplacementtracker@gmail.com
+
+points that has to be shown at the consultation page</h3>
+      </div>
 
     </div>
   );

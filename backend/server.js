@@ -140,7 +140,7 @@ app.post("/api/isSubscription", async (req, res) => {
 
     // Step 2: Check subscription in user_subscriptions table
     const subscriptionResult = await pool.query(
-      `SELECT subscription_id FROM user_subscriptions 
+      `SELECT subscription_id ,is_active FROM user_subscriptions 
        WHERE user_id = $1 
        AND company_id = $2 
        AND subscription_type = $3`,
@@ -148,7 +148,7 @@ app.post("/api/isSubscription", async (req, res) => {
     );
 
     // Step 3: Return true if exists
-    if (subscriptionResult.rows.length > 0) {
+    if (subscriptionResult.rows.length > 0 && subscriptionResult.rows[0].is_active) {
       return res.json({ isSubscribed: true });
     }
 
@@ -251,8 +251,7 @@ app.post("/api/verify-payment", async (req, res) => {
     package_id,
     sub,
     subscription_type,
-    company_id,
-    isFree
+    company_id
   } = req.body;
 console.log("Incoming body:", req.body);
 console.log("Google ID received:", sub);
@@ -268,49 +267,6 @@ console.log("Google ID received:", sub);
     }
 
     const user_id = user.rows[0].user_id;
-
-    // 🔹 FREE CONSULTATION FLOW
-    if (isFree === true) {
-  try {
-    // 1️⃣ Get user_id
-    const user = await pool.query(
-      "SELECT user_id FROM users WHERE google_id = $1",
-      [sub]
-    );
-
-    if (user.rows.length === 0) {
-      return res.status(400).json({ error: "User not found" });
-    }
-
-    const user_id = user.rows[0].user_id;
-
-    // 2️⃣ Check if consultation already exists
-    const existing = await pool.query(
-      `SELECT subscription_id 
-       FROM user_subscriptions 
-       WHERE user_id = $1 
-       AND subscription_type = 'consultation'`,
-      [user_id]
-    );
-
-    if (existing.rows.length > 0) {
-      return res.json({ message: "Consultation already booked" });
-    }
-
-    // 3️⃣ Insert only if not exists
-    await pool.query(
-      `INSERT INTO user_subscriptions
-       (user_id, transaction_id, subscription_type, company_id)
-       VALUES ($1, $2, $3, $4)`,
-      [user_id, "FREE_CONSULT", "consultation", company_id]
-    );
-
-    return res.json({ message: "Free consultation added" });
-
-  } catch (err) {
-    return res.status(500).json({ error: "Database error" });
-  }
-}
 
     // 🔹 PAID FLOW
     const body = razorpay_order_id + "|" + razorpay_payment_id;

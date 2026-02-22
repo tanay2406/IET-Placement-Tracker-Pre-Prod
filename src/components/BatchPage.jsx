@@ -109,7 +109,7 @@ export default function BatchPage() {
   }
 
   try {
-    await fetch("http://localhost:5000/api/verify-payment", {
+   const response = await fetch("http://localhost:5000/api/isSubscription", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -118,11 +118,18 @@ export default function BatchPage() {
         sub: String(storedUser.sub),
         subscription_type: "consultation",
         company_id: 100,
-        isFree: true // 👈 THIS is the trick
+        transaction_id: "FREE_CONSULT",
       }),
     });
 
-    navigate("/subscriptions");
+      const data = await response.json();
+      console.log("Subscription status:", data.isSubscribed);
+      if (data.isSubscribed) {
+        navigate("/subscriptions");
+      } else {
+        navigate(`/subscribe/${1}/pyq`);
+      }
+
 
   } catch (error) {
     console.error("Error:", error);

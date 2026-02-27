@@ -110,52 +110,65 @@
       }
 
       return (
-        <div className="min-h-screen bg-gray-950 text-white p-10">
+        <div className="min-h-screen bg-gray-950 text-white p-4 sm:p-6 md:p-10">
 
           <button
             onClick={() => navigate(-1)}
-            className="mb-6 bg-blue-600 px-4 py-2 rounded"
+            className="mb-4 md:mb-6 bg-blue-600 hover:bg-blue-700 px-3 md:px-4 py-2 rounded text-sm transition"
           >
             ← Back
           </button>
 
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-4 md:mb-6">
+            <h1 className="text-2xl md:text-3xl font-bold break-words">
               {company.Company}
             </h1>
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               <button
                 onClick={checkSubscriptionAndNavigate_PYQ}
-                className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md transition"
+                className="bg-blue-500 hover:bg-blue-600 px-3 md:px-4 py-2 rounded-md transition text-sm whitespace-nowrap"
               >
                 PYQ
               </button>
 
               <button
                 onClick={checkSubscriptionAndNavigate_Call}
-                className="bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-md transition"
+                className="bg-indigo-500 hover:bg-indigo-600 px-3 md:px-4 py-2 rounded-md transition text-sm whitespace-nowrap"
               >
                 1:1 Call
               </button>
             </div>
           </div>
 
-          <div className="bg-white/10 rounded-lg overflow-hidden">
-            <table className="w-full">
-              <tbody>
-                {Object.entries(company).map(([key, value]) => (
-                  <tr key={key} className="border-b border-white/20">
-                    <td className="px-6 py-3 font-semibold w-1/3">
-                      {key}
-                    </td>
-                    <td className="px-6 py-3">
-                      {value?.toString() || "-"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Mobile: stacked key/value rows */}
+          <div className="md:hidden bg-white/10 rounded-lg overflow-hidden divide-y divide-white/15">
+            {Object.entries(company).map(([key, value]) => (
+              <div key={key} className="px-4 py-3">
+                <p className="text-[11px] uppercase tracking-wide text-blue-100/70">{key}</p>
+                <p className="text-sm text-white break-words mt-1">{value?.toString() || "-"}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop/tablet: table */}
+          <div className="hidden md:block bg-white/10 rounded-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[720px]">
+                <tbody>
+                  {Object.entries(company).map(([key, value]) => (
+                    <tr key={key} className="border-b border-white/20">
+                      <td className="px-6 py-3 font-semibold w-1/3 whitespace-nowrap">
+                        {key}
+                      </td>
+                      <td className="px-6 py-3 break-words">
+                        {value?.toString() || "-"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 {/* ✅ TOAST HERE */}
 {toast && (

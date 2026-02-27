@@ -25,6 +25,7 @@ export default function BatchPage() {
   const sort = useSelector((state) => state.filter.sort)
   const data = data2026
   const visibleColumns = ['id', 'Date', 'Company','Eligible Batches', 'CGPA','CTC (in LPA)','Total Offers'];
+  const mobileCardFields = ['Date', 'Eligible Batches', 'CGPA', 'CTC (in LPA)', 'Total Offers']
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedCompany, setSelectedCompany] = useState(null)
@@ -213,7 +214,7 @@ const checkConsultationAndNavigate = async () => {
 
   return (
     <div className="font-['Poppins'] min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-gray-950 text-white flex flex-col relative">
-      <div className='flex flex-row justify-start gap-5 md:gap-0 md:justify-between items-center p-4 md:p-8'>
+      <div className="flex items-center gap-3 p-4 md:p-8">
 
         <ArrowLeft className='hover:cursor-pointer' onClick={() => {
           console.log('Back button clicked');
@@ -222,7 +223,7 @@ const checkConsultationAndNavigate = async () => {
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="md:ml-20 text-lg md:text-4xl font-bold text-center text-white flex flex-row items-center gap-4"
+          className="flex-1 text-lg md:text-4xl font-bold text-center text-white flex flex-row items-center justify-center gap-3 md:gap-4"
         >
           <Sparkles size={34} className='text-blue-100 hidden md:block' /> Placement Data - {batch} Batch
         </motion.h1>
@@ -233,18 +234,19 @@ const checkConsultationAndNavigate = async () => {
 
       <main className="flex-grow p-4 md:p-8">
 
-        <div className="mb-6 flex justify-between items-center">
-        <h1 className='text-[10px] w-1/2 md:w-full md:text-lg font-poppins tracking-wide text-gray-100'>
+        <div className="mb-6 flex flex-col gap-3 md:flex-row md:justify-between md:items-center">
+        <h1 className='text-[11px] md:text-lg font-poppins tracking-wide text-gray-100'>
   Company-wise IET DAVV Indore Placement Data for the {batch} Batch
 </h1>
-
+ 
  {/* button */}
+      <div className="flex flex-wrap items-center justify-end gap-2 md:gap-3">
       {user ? (
-  <div className="relative flex gap-3" ref={profileMenuRef}>
+  <div className="relative" ref={profileMenuRef}>
     {/* My Profile Button */}
     <button
       onClick={() => setShowProfile(!showProfile)}
-      className="bg-orange-600 px-4 py-2 rounded-md text-sm hover:bg-orange-700 transition"
+      className="bg-orange-600 px-3 md:px-4 py-1.5 md:py-2 rounded-md text-xs md:text-sm hover:bg-orange-700 transition whitespace-nowrap"
     >
       My Profile
     </button>
@@ -254,7 +256,7 @@ const checkConsultationAndNavigate = async () => {
     {/* Slider / Dropdown Panel */}
     
       <div
-    className={`absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-4 z-50 transform transition-all duration-300 ${
+    className={`fixed left-4 right-4 top-24 sm:absolute sm:left-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-72 max-h-[70vh] overflow-y-auto overscroll-contain bg-white shadow-lg rounded-lg p-4 z-[60] transform transition-all duration-300 ${
       showProfile
         ? "opacity-100 translate-y-0"
         : "opacity-0 -translate-y-2 pointer-events-none"
@@ -312,10 +314,11 @@ const checkConsultationAndNavigate = async () => {
 
     <button
       onClick={handleConsultationClick}
-      className=" m-3 bg-purple-600 px-4 py-2 rounded-md text-sm hover:bg-purple-700 transition"
+      className="bg-purple-600 px-3 md:px-4 py-1.5 md:py-2 rounded-md text-xs md:text-sm hover:bg-purple-700 transition whitespace-nowrap"
     >
       1:1 Consultation
     </button>
+    </div>
 
 
 
@@ -328,7 +331,83 @@ const checkConsultationAndNavigate = async () => {
           </button> */}
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Mobile: card list */}
+        <div className="md:hidden space-y-3">
+          <div className="bg-white/5 rounded-lg p-3 flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                placeholder="Search company..."
+                value={filters.Company || ''}
+                onChange={(e) => handleFilterChange('Company', e.target.value)}
+                className="flex-1 min-w-0 bg-blue-800 bg-opacity-40 text-white px-3 py-2 rounded text-sm placeholder-blue-200"
+              />
+              <button
+                onClick={() => dispatch(clearFilters())}
+                className="bg-red-600/90 hover:bg-red-700 px-3 py-2 rounded text-sm whitespace-nowrap"
+              >
+                Clear
+              </button>
+            </div>
+            <p className="text-xs text-blue-100/80">
+              Tap a card for quick details.
+            </p>
+          </div>
+
+          {processedData.map((row, idx) => (
+            <div
+              key={idx}
+              onClick={() => handleCompanyClick(row)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  handleCompanyClick(row)
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              className="w-full text-left bg-white/5 hover:bg-white/10 transition rounded-lg p-4 border border-blue-900/40 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white truncate">{row['Company'] || '-'}</p>
+                  <p className="text-xs text-blue-100/80 mt-0.5">{row['Date'] || '-'}</p>
+                </div>
+                <span className="text-xs bg-blue-700/60 px-2 py-1 rounded whitespace-nowrap">
+                  #{row.id ?? '-'}
+                </span>
+              </div>
+
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                {mobileCardFields.map((field) => (
+                  <div key={field} className="bg-blue-950/40 rounded p-2">
+                    <p className="text-[10px] text-blue-100/70 uppercase tracking-wide">{field}</p>
+                    <p className="text-xs text-white mt-0.5">
+                      {!isNaN(Number(row[field])) ? formatNumber(Number(row[field])) : row[field]?.toString() || '-'}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-3 flex gap-2">
+                <span className="text-xs bg-blue-700/70 px-3 py-1.5 rounded">Details</span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    navigate(`/company/${row.id}`)
+                  }}
+                  className="text-xs bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded"
+                >
+                  Read More
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop/tablet: table */}
+        <div className="hidden md:block overflow-x-auto">
             <table className="min-w-full bg-white bg-opacity-5 rounded-lg">
               <thead className="bg-blue-900/80">
                 <tr>
@@ -367,7 +446,7 @@ const checkConsultationAndNavigate = async () => {
                             placeholder={`Filter ${header}`}
                             value={filters[header] || ''}
                             onChange={(e) => handleFilterChange(header, e.target.value)}
-                            className="bg-blue-800 bg-opacity-50 text-white px-2 py-0.5 w-auto rounded text-xs placeholder-blue-300"
+                            className="bg-blue-800 bg-opacity-50 text-white px-2 py-0.5 w-24 rounded text-xs placeholder-blue-300"
                           />
                         )}
                       </div>

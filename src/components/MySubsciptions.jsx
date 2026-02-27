@@ -127,15 +127,15 @@ export default function MySubscriptions() {
       {consultationSubs.map((sub) => (
         <div
           key={sub.subscription_id}
-          className="bg-gray-900 p-4 rounded-lg flex justify-between items-center"
+          className="bg-gray-800 p-5 rounded-lg mb-4 flex justify-between items-center"
         >
           <div>
-            <h3 className="text-lg font-semibold">
+            <h3 className="text-lg">
               1:1 Consultation
             </h3>
-            <p className="text-sm text-gray-400">
+            {/* <p className="text-sm text-gray-400">
               Transaction ID: {sub.transaction_id}
-            </p>
+            </p> */}
           </div>
 
           <button

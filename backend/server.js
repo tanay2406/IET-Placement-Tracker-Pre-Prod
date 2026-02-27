@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const sendSubscriptionEmail = require("./sendEmail");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Allow frontend to connect
 app.use(cors());
@@ -18,8 +18,8 @@ app.use(express.json());
 console.log("🔥 THIS SERVER FILE IS RUNNING 🔥");
 // razorpay instance
 const razorpay = new Razorpay({
-  key_id: 'rzp_test_SHKfz1fL2NiSh3',
-  key_secret: 'g0Rb9MwFQfbVHxgXrAhYVzBl'
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 // Test route
@@ -236,7 +236,7 @@ app.post('/api/create-order', async (req, res) => {
       orderId: order.id,
       amount: packageData.amount * 100,
       currency: "INR",
-      key: 'rzp_test_SHKfz1fL2NiSh3',
+      key: process.env.RAZORPAY_KEY_ID,
       package_id: packageData.package_id
     });
 
@@ -276,7 +276,7 @@ console.log("Google ID received:", sub);
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
     const expectedSignature = crypto
-      .createHmac("sha256", "g0Rb9MwFQfbVHxgXrAhYVzBl")
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
       .update(body.toString())
       .digest("hex");
 

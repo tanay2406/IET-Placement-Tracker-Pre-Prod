@@ -2,11 +2,23 @@ const nodemailer = require("nodemailer");
 
 const sendSubscriptionEmail = async (toEmail, userName) => {
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
+    // const transporter = nodemailer.createTransport({
+    //   service: "gmail",
+    //   auth: {
+    //     user: process.env.EMAIL_USER,      // your email
+    //     pass: process.env.EMAIL_PASS,      // app password
+    //   },
+    // });
+const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,            // VERY IMPORTANT
+      secure: false,        // false for 587
       auth: {
-        user: process.env.EMAIL_USER,      // your email
-        pass: process.env.EMAIL_PASS,      // app password
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
 

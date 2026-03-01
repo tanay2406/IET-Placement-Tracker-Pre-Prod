@@ -29,7 +29,7 @@
 
         try {
           const response = await fetch(
-            "https://iet-placement-tracker-pre-prod.railway.internal/api/isSubscription",
+            "https://iet-placement-tracker-pre-prod-production.up.railway.app/api/isSubscription",
             {
               method: "POST",
               headers: {
@@ -75,7 +75,7 @@
 
         try {
           const response = await fetch(
-            "https://iet-placement-tracker-pre-prod.railway.internal/api/isSubscription",
+            "https://iet-placement-tracker-pre-prod-production.up.railway.app/api/isSubscription",
             {
               method: "POST",
               headers: {

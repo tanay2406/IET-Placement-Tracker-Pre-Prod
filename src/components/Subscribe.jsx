@@ -57,7 +57,7 @@ export default function Subscribe() {
       navigate("/login");
       return;
     }
-  const response = await fetch("https://iet-placement-tracker-pre-prod.railway.internal/api/create-order", {
+  const response = await fetch("https://iet-placement-tracker-pre-prod-production.up.railway.app/api/create-order", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -86,7 +86,7 @@ const openRazorpay = (data) => {
 
     handler: async function (response) {
 
-      const verifyRes = await fetch("https://iet-placement-tracker-pre-prod.railway.internal/api/verify-payment", {
+      const verifyRes = await fetch("https://iet-placement-tracker-pre-prod-production.up.railway.app/api/verify-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

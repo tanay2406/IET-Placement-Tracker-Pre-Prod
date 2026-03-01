@@ -13,7 +13,7 @@ export default function SubscribeConsultation() {
 
     try {
       const response = await fetch(
-        "https://iet-placement-tracker-pre-prod.railway.internal/api/makeSubscription",
+        "https://iet-placement-tracker-pre-prod-production.up.railway.app/api/makeSubscription",
         {
           method: "POST",
           headers: {

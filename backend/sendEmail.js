@@ -89,7 +89,7 @@ const sendSubscriptionEmail = async (toEmail, userName) => {
   try {
     await resend.emails.send({
       from: "onboarding@resend.dev",
-      to: toEmail,
+      to: 'ietplacementtracker@gmail.com',
       subject: "Consultation Booking Confirmed – IET Placement Tracker",
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">

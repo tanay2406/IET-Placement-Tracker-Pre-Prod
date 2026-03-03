@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function SubscribeConsultation() {
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false)
   const handleUnlock = async () => {
+    setLoading(true);
     const storedUser = JSON.parse(localStorage.getItem("user"));
 
     if (!storedUser) {
       navigate("/login");
+      setLoading(false);
       return;
     }
 
@@ -32,9 +35,10 @@ export default function SubscribeConsultation() {
       console.log(data);
 
       navigate("/subscriptions");
-
     } catch (error) {
       console.error("Error:", error);
+    }finally {
+          setLoading(false);
     }
   };
 
@@ -92,7 +96,17 @@ This session is completely free of cost (for now).
 For any queries, you can reach out to us at:
 ietplacementtracker@gmail.com
 </h3>
+
+
+{/* ✅ loader HERE */}
+      {loading && (
+  <div className="fixed inset-0 z-[999] bg-black/50 backdrop-blur-sm flex items-center justify-center">
+    <div className="h-10 w-10 rounded-full border-4 border-white/30 border-t-white animate-spin" />
+  </div>
+)}
       </div>
+
+
 
     </div>
   );
